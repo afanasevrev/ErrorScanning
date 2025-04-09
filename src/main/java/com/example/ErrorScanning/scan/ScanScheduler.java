@@ -13,7 +13,7 @@ public class ScanScheduler {
     @Scheduled(fixedDelay = 60000)
     public void scheduledScan() {
         ScanRequest request = new ScanRequest();
-        request.setUrl("http://example.com"); // Можно брать URL из настроек или базы данных
+        request.setUrl("http://aek-54.ru/"); // Можно брать URL из настроек или базы данных
         ScanResult result = scanService.performScan(request);
         // Сохраняйте результат в БД или обрабатывайте иным образом (например, логирование)
         System.out.println("Сканирование для " + result.getUrl());
