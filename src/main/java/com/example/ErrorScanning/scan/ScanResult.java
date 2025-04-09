@@ -1,4 +1,4 @@
-package com.example.ErrorScanning;
+package com.example.ErrorScanning.scan;
 
 import java.util.List;
 /**
