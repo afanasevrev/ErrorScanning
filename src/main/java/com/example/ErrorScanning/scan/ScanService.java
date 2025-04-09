@@ -17,7 +17,7 @@ public class ScanService {
         scanResult.setUrl(url);
 
         List<String> vulnerabilities = new ArrayList<>();
-        // Пример тестового payload для иллюстрации проверки SQL-инъекции.
+        // Проверка SQL-инъекции.
         String payload = "' OR '1'='1";
         String testUrl = url + "?param=" + URLEncoder.encode(payload, StandardCharsets.UTF_8);
         try {
