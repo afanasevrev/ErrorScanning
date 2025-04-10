@@ -61,7 +61,7 @@
 </head>
 <body>
 <div class="container">
-    <form th:action="@{/submit}" method="post" id="myForm">
+    <form th:action="@{/scanner/scan}" method="get" id="myForm">
         <textarea id="userInput" name="userInput" placeholder="Введите текст" required></textarea>
         <button type="submit">Отправить</button>
     </form>
@@ -69,26 +69,23 @@
 </div>
 <script>
     document.getElementById('myForm').onsubmit = function(event) {
-        event.preventDefault();
+        event.preventDefault(); // Отменяем стандартное поведение формы
         var input = document.getElementById('userInput').value;
         var statusDiv = document.getElementById('status');
         statusDiv.style.display = 'block';
         statusDiv.innerText = 'Отправка...';
 
-        fetch('/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({ userInput: input })
+        // Формируем URL с параметром userInput
+        var url = '/scanner/scan?targetUrl=' + encodeURIComponent(input);
+
+        fetch(url, {
+            method: 'GET'
         })
         .then(response => response.text()) // Преобразование ответа в текст
         .then(text => {
-            // Обработка текстового ответа от сервера
             statusDiv.innerText = text;
         })
         .catch(error => {
-            // Обработка ошибки запроса
             statusDiv.innerText = 'Произошла ошибка: ' + error.message;
         });
     };
