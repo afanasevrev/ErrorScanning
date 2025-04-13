@@ -11,7 +11,8 @@
             color: #333;
         }
         .container {
-            width: 350px;
+            width: 600px; /* Ширина увеличена до 600px */
+            max-width: 90%; /* Для адаптивности */
             margin: auto;
             padding: 20px;
             background-color: #fff;
@@ -28,7 +29,7 @@
             border-radius: 6px;
             box-sizing: border-box;
             transition: border-color 0.3s;
-            resize: vertical; /* позволяет пользователю изменять размер по вертикали */
+            resize: vertical;
         }
         textarea:focus {
             border-color: #4c9aff;
@@ -49,6 +50,7 @@
         button:hover {
             background-color: #357abd;
         }
+        /* Стили для блока ответа */
         #status {
             margin-top: 10px;
             padding: 10px;
@@ -56,6 +58,9 @@
             border-radius: 6px;
             display: none;
             background-color: #e3e7ed;
+            overflow: hidden;
+            transition: height 0.3s ease;
+            width: 100%;
         }
     </style>
 </head>
@@ -73,17 +78,35 @@
         var input = document.getElementById('userInput').value;
         var statusDiv = document.getElementById('status');
         statusDiv.style.display = 'block';
+
+        // Сбрасываем высоту в auto и фиксируем начальную высоту
+        statusDiv.style.height = 'auto';
+        var startHeight = statusDiv.offsetHeight;
+
         statusDiv.innerText = 'Отправка...';
 
-        // Формируем URL с параметром userInput
+        // Формируем URL с параметром userInput (переименован параметр в targetUrl)
         var url = '/scanner/scan?targetUrl=' + encodeURIComponent(input);
 
         fetch(url, {
             method: 'GET'
         })
-        .then(response => response.text()) // Преобразование ответа в текст
+        .then(response => response.text())
         .then(text => {
+            // Перед обновлением содержимого фиксируем текущую высоту для анимации
+            statusDiv.style.height = startHeight + 'px';
+            // Обновляем содержимое полученным текстом
             statusDiv.innerText = text;
+            // Вычисляем новую требуемую высоту (scrollHeight)
+            var newHeight = statusDiv.scrollHeight;
+            // Принудительный запуск перерисовки
+            statusDiv.offsetHeight;
+            // Устанавливаем новую высоту для плавного перехода
+            statusDiv.style.height = newHeight + 'px';
+            // По завершении анимации сбрасываем значение, чтобы блок мог динамически подстраиваться
+            setTimeout(function(){
+                statusDiv.style.height = 'auto';
+            }, 300);
         })
         .catch(error => {
             statusDiv.innerText = 'Произошла ошибка: ' + error.message;
